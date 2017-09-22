@@ -1,18 +1,47 @@
 package com.trentontelge.webarchivex
 
+import java.util.regex.Pattern
+
 fun main(args: Array<String>){
-    if (args.isNotEmpty()){
-        //TODO parse args array
-    } else {
         printCopyright()
         printCommandTree()
         val inScan = System.`in`
         var command = ""
-        while (command ==""){
+        var rootDomain: String
+        var savePath: String
+        var limit: Boolean
+        var internalize = true
+        while (command == ""){
             command = inScan.bufferedReader().readLine()
-            //TODO parse command string
+            val domainMatcher = Pattern.compile("domain=['\"][\\w.]+['\"]").matcher(command)
+            while (domainMatcher.find()){
+                rootDomain = command.substring(domainMatcher.start() + 8, domainMatcher.end() - 1)
+                println(rootDomain) //DEBUG
+            }
+            val savePathMatcher = Pattern.compile("save=['\"][\\w:/\\\\.()!@#\$%^\\-+=*~`&\\s]+['\"]").matcher(command)
+            while (savePathMatcher.find()){
+                savePath = command.substring(savePathMatcher.start() + 6, savePathMatcher.end() - 1)
+                println(savePath) //DEBUG
+            }
+            val limitMatcher = Pattern.compile("limit=[yYnN]").matcher(command)
+            when(limitMatcher.find()){
+                command.substring(limitMatcher.start() + 7, limitMatcher.end() - 1).contains("y", true) -> {
+                    limit = true
+                }
+                command.substring(limitMatcher.start() + 7, limitMatcher.end() - 1).contains("n", true) -> {
+                    limit = false
+                }
+            }
+            val internalMatcher = Pattern.compile("internalize=[yYnN]").matcher(command)
+            when(internalMatcher.find()){
+                command.substring(internalMatcher.start() + 13, internalMatcher.end() - 1).contains("y", true) -> {
+                    internalize = true
+                }
+                command.substring(internalMatcher.start() + 13, internalMatcher.end() - 1).contains("n", true) -> {
+                    internalize = false
+                }
+            }
         }
-    }
 }
 
 fun printCopyright(){
@@ -23,5 +52,11 @@ fun printCopyright(){
 }
 
 fun printCommandTree(){
-    println("Usage: wax domain={domain} save={save path} limit={Y/N}")
+    /*
+    * Domain defines starting point
+    * Save defines WAX save location
+    * Limit defines whether to limit to primary domain
+    * Internalize defines whether to convert links in webpage to relative links
+    * */
+    println("Usage: wax domain={domain} save={save path} limit={Y/N} internalize={Y/N}")
 }
