@@ -12,34 +12,40 @@ fun main(args: Array<String>){
         var limit: Boolean
         var internalize = true
         while (command == ""){
-            command = inScan.bufferedReader().readLine()
-            val domainMatcher = Pattern.compile("domain=['\"][\\w.]+['\"]").matcher(command)
-            while (domainMatcher.find()){
-                rootDomain = command.substring(domainMatcher.start() + 8, domainMatcher.end() - 1)
-                println(rootDomain) //DEBUG
-            }
-            val savePathMatcher = Pattern.compile("save=['\"][\\w:/\\\\.()!@#\$%^\\-+=*~`&\\s]+['\"]").matcher(command)
-            while (savePathMatcher.find()){
-                savePath = command.substring(savePathMatcher.start() + 6, savePathMatcher.end() - 1)
-                println(savePath) //DEBUG
-            }
-            val limitMatcher = Pattern.compile("limit=[yYnN]").matcher(command)
-            when(limitMatcher.find()){
-                command.substring(limitMatcher.start() + 6, limitMatcher.end()).contains("y", true) -> {
-                    limit = true
+            try {
+                command = inScan.bufferedReader().readLine()
+                val domainMatcher = Pattern.compile("domain=['\"][\\w.]+['\"]").matcher(command)
+                while (domainMatcher.find()) {
+                    rootDomain = command.substring(domainMatcher.start() + 8, domainMatcher.end() - 1)
+                    println(rootDomain) //DEBUG
                 }
-                command.substring(limitMatcher.start() + 6, limitMatcher.end()).contains("n", true) -> {
-                    limit = false
+                val savePathMatcher = Pattern.compile("save=['\"][\\w:/\\\\.()!@#\$%^\\-+=*~`&\\s]+['\"]").matcher(command)
+                while (savePathMatcher.find()) {
+                    savePath = command.substring(savePathMatcher.start() + 6, savePathMatcher.end() - 1)
+                    println(savePath) //DEBUG
                 }
-            }
-            val internalMatcher = Pattern.compile("internalize=[yYnN]").matcher(command)
-            when(internalMatcher.find()){
-                command.substring(internalMatcher.start() + 12, internalMatcher.end()).contains("y", true) -> {
-                    internalize = true
+                val limitMatcher = Pattern.compile("limit=[yYnN]").matcher(command)
+                when (limitMatcher.find()) {
+                    command.substring(limitMatcher.start() + 6, limitMatcher.end()).contains("y", true) -> {
+                        limit = true
+                    }
+                    command.substring(limitMatcher.start() + 6, limitMatcher.end()).contains("n", true) -> {
+                        limit = false
+                    }
                 }
-                command.substring(internalMatcher.start() + 12, internalMatcher.end()).contains("n", true) -> {
-                    internalize = false
+                val internalMatcher = Pattern.compile("internalize=[yYnN]").matcher(command)
+                when (internalMatcher.find()) {
+                    command.substring(internalMatcher.start() + 12, internalMatcher.end()).contains("y", true) -> {
+                        internalize = true
+                    }
+                    command.substring(internalMatcher.start() + 12, internalMatcher.end()).contains("n", true) -> {
+                        internalize = false
+                    }
                 }
+            } catch (e: IllegalStateException){
+                println("You have entered a malformed command. Try Again.")
+                printCommandTree()
+                command = ""
             }
         }
 }
