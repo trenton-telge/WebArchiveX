@@ -25,19 +25,19 @@ fun main(args: Array<String>){
             }
             val limitMatcher = Pattern.compile("limit=[yYnN]").matcher(command)
             when(limitMatcher.find()){
-                command.substring(limitMatcher.start() + 7, limitMatcher.end() - 1).contains("y", true) -> {
+                command.substring(limitMatcher.start() + 6, limitMatcher.end()).contains("y", true) -> {
                     limit = true
                 }
-                command.substring(limitMatcher.start() + 7, limitMatcher.end() - 1).contains("n", true) -> {
+                command.substring(limitMatcher.start() + 6, limitMatcher.end()).contains("n", true) -> {
                     limit = false
                 }
             }
             val internalMatcher = Pattern.compile("internalize=[yYnN]").matcher(command)
             when(internalMatcher.find()){
-                command.substring(internalMatcher.start() + 13, internalMatcher.end() - 1).contains("y", true) -> {
+                command.substring(internalMatcher.start() + 12, internalMatcher.end()).contains("y", true) -> {
                     internalize = true
                 }
-                command.substring(internalMatcher.start() + 13, internalMatcher.end() - 1).contains("n", true) -> {
+                command.substring(internalMatcher.start() + 12, internalMatcher.end()).contains("n", true) -> {
                     internalize = false
                 }
             }
