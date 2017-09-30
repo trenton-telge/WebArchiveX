@@ -1,16 +1,19 @@
 package com.trentontelge.webarchivex
 
+import com.trentontelge.webarchivex.util.grabPageToTemp
 import java.util.regex.Pattern
+
+var rootDomain: String = ""
+var savePath: String = ""
+var limit: Boolean = false
+var internalize = true
 
 fun main(args: Array<String>){
         printCopyright()
         printCommandTree()
         val inScan = System.`in`
         var command = ""
-        var rootDomain: String
-        var savePath: String
-        var limit: Boolean
-        var internalize = true
+
         while (command == ""){
             try {
                 command = inScan.bufferedReader().readLine()
@@ -48,6 +51,15 @@ fun main(args: Array<String>){
                 command = ""
             }
         }
+    when {
+        rootDomain.endsWith(".htm") || rootDomain.endsWith(".html") || rootDomain.endsWith(".php") || rootDomain.endsWith(".css") || rootDomain.endsWith(".js") -> {
+            grabPageToTemp(rootDomain).processPage()
+        }
+        else -> {
+            grabPageToTemp(rootDomain + "/index.php").processPage()
+            grabPageToTemp(rootDomain + "/index.html").processPage()
+        }
+    }
 }
 
 fun printCopyright(){
