@@ -31,6 +31,8 @@ class TempWebArchivePage(private val remoteLocation: String, private val tempFil
                 }
                 else -> {
                     grabResource(link)
+                    /* DEV */
+                    println("RESOURCE - $link")
                 }
             }
         }

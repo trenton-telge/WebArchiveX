@@ -7,13 +7,14 @@ import java.io.*
 import java.net.URL
 
 fun grabPageToTemp(url: String): TempWebArchivePage{
+    println("PAGE - $url")
     val root = File(savePath)
     if (root.isFile){
         throw IOException()
     } else if (!root.exists()){
         root.mkdirs()
     }
-    copy(URL(url).openStream(), File(root.toString() + (System.getProperty("file.separator")) + convertToPathArchitecture(url)).outputStream())
+    copy(URL("http://" + url).openStream(), File(root.toString() + (System.getProperty("file.separator")) + convertToPathArchitecture(url)).outputStream())
     return TempWebArchivePage(url, File(root.toString() + (System.getProperty("file.separator")) + convertToPathArchitecture(url)))
 }
 
@@ -24,7 +25,7 @@ fun grabResource(url: String){
     } else if (!root.exists()){
         root.mkdirs()
     }
-    copy(URL(url).openStream(), File(root.toString() + (System.getProperty("file.separator")) + convertToPathArchitecture(url)).outputStream())
+    copy(URL("http://" + url).openStream(), File(root.toString() + (System.getProperty("file.separator")) + convertToPathArchitecture(url)).outputStream())
 }
 
 fun convertToPathArchitecture(url: String): String{
