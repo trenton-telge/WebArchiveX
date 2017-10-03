@@ -58,6 +58,7 @@ fun main(args: Array<String>){
         else -> {
             grabPageToTemp(rootDomain + "/index.php").processPage()
             grabPageToTemp(rootDomain + "/index.html").processPage()
+            grabPageToTemp(rootDomain + "/index.htm").processPage()
         }
     }
 }

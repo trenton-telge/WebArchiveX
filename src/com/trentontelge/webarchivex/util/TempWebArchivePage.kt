@@ -22,13 +22,15 @@ class TempWebArchivePage(private val remoteLocation: String, private val tempFil
         for (link in dependencies){
             when {
                 link.endsWith("htm") || link.endsWith("html") || link.endsWith("php") || link.endsWith("css") || link.endsWith("js") -> {
-                    //TODO grab page
+                    grabPageToTemp(link).processPage()
                 }
                 link.endsWith("/") -> {
-                    //TODO try grabbing index as htm, html, php
+                    grabPageToTemp(link + "index.php").processPage()
+                    grabPageToTemp(link + "index.html").processPage()
+                    grabPageToTemp(link + "index.htm").processPage()
                 }
                 else -> {
-                    //TODO grab resource
+                    grabResource(link)
                 }
             }
         }
