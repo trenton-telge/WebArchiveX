@@ -53,12 +53,12 @@ fun main(args: Array<String>){
         }
     when {
         rootDomain.endsWith(".htm") || rootDomain.endsWith(".html") || rootDomain.endsWith(".php") || rootDomain.endsWith(".css") || rootDomain.endsWith(".js") -> {
-            grabPageToTemp(rootDomain).processPage()
+            grabPageToTemp(rootDomain)?.processPage()
         }
         else -> {
-            grabPageToTemp(rootDomain + "/index.php").processPage()
-            grabPageToTemp(rootDomain + "/index.html").processPage()
-            grabPageToTemp(rootDomain + "/index.htm").processPage()
+            grabPageToTemp(rootDomain + "/index.php")?.processPage()
+            grabPageToTemp(rootDomain + "/index.html")?.processPage()
+            grabPageToTemp(rootDomain + "/index.htm")?.processPage()
         }
     }
 }
