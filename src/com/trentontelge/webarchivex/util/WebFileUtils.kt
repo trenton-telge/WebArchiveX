@@ -5,7 +5,6 @@ import org.apache.commons.io.FilenameUtils
 import org.apache.commons.io.IOUtils.copy
 import java.io.*
 import java.net.ConnectException
-import java.net.URI
 import java.net.URL
 
 fun grabPageToTemp(url: String): TempWebArchivePage? {
