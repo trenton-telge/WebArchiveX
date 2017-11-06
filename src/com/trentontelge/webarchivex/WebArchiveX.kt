@@ -1,6 +1,7 @@
 package com.trentontelge.webarchivex
 
-import com.trentontelge.webarchivex.util.grabPageToTemp
+import com.trentontelge.webarchivex.util.grabPage
+import java.io.File
 import java.util.regex.Pattern
 
 var rootDomain: String = ""
@@ -20,12 +21,14 @@ fun main(args: Array<String>){
                 val domainMatcher = Pattern.compile("domain=['\"][\\w.]+['\"]").matcher(command)
                 while (domainMatcher.find()) {
                     rootDomain = command.substring(domainMatcher.start() + 8, domainMatcher.end() - 1)
-                    println(rootDomain) //DEBUG
                 }
                 val savePathMatcher = Pattern.compile("save=['\"][\\w:/\\\\.()!@#\$%^\\-+=*~`&\\s]+['\"]").matcher(command)
                 while (savePathMatcher.find()) {
                     savePath = command.substring(savePathMatcher.start() + 6, savePathMatcher.end() - 1)
-                    println(savePath) //DEBUG
+                    File(savePath).mkdirs()
+                    if(!savePath.endsWith("\\")){
+                        savePath += "\\"
+                    }
                 }
                 val limitMatcher = Pattern.compile("limit=[yYnN]").matcher(command)
                 when (limitMatcher.find()) {
@@ -51,16 +54,7 @@ fun main(args: Array<String>){
                 command = ""
             }
         }
-    when {
-        rootDomain.endsWith(".htm") || rootDomain.endsWith(".html") || rootDomain.endsWith(".php") || rootDomain.endsWith(".css") || rootDomain.endsWith(".js") -> {
-            grabPageToTemp(rootDomain)?.processPage()
-        }
-        else -> {
-            grabPageToTemp(rootDomain + "/index.php")?.processPage()
-            grabPageToTemp(rootDomain + "/index.html")?.processPage()
-            grabPageToTemp(rootDomain + "/index.htm")?.processPage()
-        }
-    }
+    grabPage(rootDomain)
 }
 
 fun printCopyright(){
