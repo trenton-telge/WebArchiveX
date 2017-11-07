@@ -1,26 +1,22 @@
 package com.trentontelge.webarchivex.util
 
 import com.trentontelge.webarchivex.savePath
-import org.apache.commons.io.FilenameUtils
-import org.apache.commons.io.IOUtils.copy
+import org.apache.commons.io.FileUtils.copyURLToFile
+import org.jsoup.Jsoup
+import org.jsoup.UnsupportedMimeTypeException
 import java.io.File
-import java.io.IOException
-import java.net.ConnectException
 import java.net.HttpURLConnection
 import java.net.URL
-import jdk.nashorn.internal.runtime.ScriptingFunctions.readLine
-import org.apache.commons.io.FileUtils.copyURLToFile
-import java.io.InputStreamReader
-import java.io.BufferedReader
-
+import java.util.*
 
 
 fun grabPage(url: String){
-    val fullUrl: String = if (!url.contains("http://")){
+    var fullUrl: String = if (!url.contains("http://")){
         ("http://" + url)
     } else {
         url
     }
+    fullUrl = fullUrl.replace(Regex("\\?[\\w\\d=.]+"), "")
     try {
         val obj = URL(fullUrl)
         print("Connecting to $fullUrl... ")
@@ -53,7 +49,8 @@ fun grabPage(url: String){
         } else {
             print("Downloading to ${convertToPathArchitecture(fullUrl)}... ")
             copyURLToFile(URL(fullUrl), File(savePath + convertToPathArchitecture(fullUrl)))
-            print("complete.\n")
+            print("complete.")
+            parseLinks(fullUrl)
         }
 
     } catch (e: Exception) {
@@ -61,6 +58,37 @@ fun grabPage(url: String){
     }
 
 
+}
+
+fun parseLinks(url: String){
+    val fullUrl: String = if (!url.contains("http://")){
+        ("http://" + url)
+    } else {
+        url
+    }
+    try {
+        val doc = Jsoup.connect(fullUrl).get()
+        println("\nParsing links in page... ")
+        val links = doc.select("a[href]")
+        val media = doc.select("[src]")
+        val imports = doc.select("link[href]")
+        val finalLinks = Vector<String>()
+        for (src in media) {
+            finalLinks.addElement(src.attr("abs:src"))
+        }
+        for (link in imports) {
+            finalLinks.addElement(link.attr("abs:href"))
+        }
+        for (link in links) {
+            finalLinks.addElement(link.attr("abs:href"))
+        }
+        print("done.\n")
+        for (link in finalLinks) {
+            grabPage(link)
+        }
+    } catch (e: UnsupportedMimeTypeException){
+        println("\nResource saved.")
+    }
 }
 
 fun convertToPathArchitecture(url: String): String{
