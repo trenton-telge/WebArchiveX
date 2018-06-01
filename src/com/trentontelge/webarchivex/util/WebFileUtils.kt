@@ -1,6 +1,7 @@
 package com.trentontelge.webarchivex.util
 
 import com.trentontelge.webarchivex.savePath
+import com.trentontelge.webarchivex.savedPaths
 import org.apache.commons.io.FileUtils.copyURLToFile
 import org.jsoup.Jsoup
 import org.jsoup.UnsupportedMimeTypeException
@@ -9,10 +10,11 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
 
+//wax domain="eventhorizonwebdesign.com" save="C:\Users\darkf\Desktop\ehwd\" limit=n internalize=y
 
 fun grabPage(url: String){
     var fullUrl: String = if (!url.contains("http://")){
-        ("http://" + url)
+        ("http://$url")
     } else {
         url
     }
@@ -57,18 +59,17 @@ fun grabPage(url: String){
         e.printStackTrace()
     }
 
-
 }
 
 fun parseLinks(url: String){
     val fullUrl: String = if (!url.contains("http://")){
-        ("http://" + url)
+        ("http://$url")
     } else {
         url
     }
     try {
         val doc = Jsoup.connect(fullUrl).get()
-        println("\nParsing links in page... ")
+        print("\nParsing links in page... ")
         val links = doc.select("a[href]")
         val media = doc.select("[src]")
         val imports = doc.select("link[href]")
@@ -84,7 +85,17 @@ fun parseLinks(url: String){
         }
         print("done.\n")
         for (link in finalLinks) {
-            grabPage(link)
+            val linkf = if (link.contains("?")){
+                link.substring(0, link.indexOf("?"))
+            } else {
+                link
+            }
+            println(savedPaths)
+            println(linkf)
+            if(!savedPaths.contains(linkf)) {
+                savedPaths.addElement(linkf)
+                grabPage(linkf)
+            }
         }
     } catch (e: UnsupportedMimeTypeException){
         println("\nResource saved.")

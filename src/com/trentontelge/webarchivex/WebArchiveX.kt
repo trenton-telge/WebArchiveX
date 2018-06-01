@@ -2,12 +2,14 @@ package com.trentontelge.webarchivex
 
 import com.trentontelge.webarchivex.util.grabPage
 import java.io.File
+import java.util.*
 import java.util.regex.Pattern
 
 var rootDomain: String = ""
 var savePath: String = ""
 var limit: Boolean = false
 var internalize = true
+val savedPaths = Vector<String>()
 
 fun main(args: Array<String>){
         printCopyright()
