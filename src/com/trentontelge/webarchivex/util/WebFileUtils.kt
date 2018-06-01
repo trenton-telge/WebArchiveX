@@ -93,8 +93,6 @@ fun parseLinks(url: String){
             } else {
                 link
             }
-            println(savedPaths)
-            println(linkf)
             if(!savedPaths.contains(linkf)) {
                 savedPaths.addElement(linkf)
                 grabPage(linkf)
