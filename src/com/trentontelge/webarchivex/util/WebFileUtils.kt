@@ -1,5 +1,7 @@
 package com.trentontelge.webarchivex.util
 
+import com.trentontelge.webarchivex.limit
+import com.trentontelge.webarchivex.rootDomain
 import com.trentontelge.webarchivex.savePath
 import com.trentontelge.webarchivex.savedPaths
 import org.apache.commons.io.FileUtils.copyURLToFile
@@ -19,6 +21,7 @@ fun grabPage(url: String){
         url
     }
     fullUrl = fullUrl.replace(Regex("\\?[\\w\\d=.]+"), "")
+    if (limit && !fullUrl.contains(rootDomain)){ return } //One-liner for the option not to span domains :D
     try {
         val obj = URL(fullUrl)
         print("Connecting to $fullUrl... ")
